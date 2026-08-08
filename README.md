@@ -15,6 +15,21 @@
 
 ---
 
+> ## ⚠️ PERINGATAN KEAMANAN
+>
+> Proyek ini adalah **objek pembelajaran security testing** (pentest/CTF) dan **tidak aman untuk dipakai langsung di produksi**.
+>
+> Audit keamanan (white-box + black-box) menemukan, antara lain:
+> - **Kredensial admin default** (`admin@yamasy.sch.id` / `admin123`) dari seeder.
+> - **Tidak ada rate limiting** pada endpoint login admin.
+> - **Login ortu lemah** (NIS + nama ibu plaintext, tanpa password).
+> - **Ortu dapat membuat tagihan mandiri** tanpa batas/nominal bebas.
+> - `APP_DEBUG=true` dan **header keamanan tidak lengkap** (CSP, X-Frame-Options, dll.).
+>
+> **JANGAN deploy kode ini ke server publik tanpa memperbaiki temuan di atas.** Repository ini dipublikasikan untuk keperluan pembelajaran keamanan web. Setiap penggunaan di lingkungan nyata adalah tanggung jawab pengguna.
+
+---
+
 ## Tentang
 
 Sistem pembayaran sekolah berbasis web untuk Tata Usaha YAMASY. Orang tua bisa melihat tagihan dan mengirim bukti pembayaran secara mandiri, sementara admin memverifikasi dan mengelola seluruh data keuangan sekolah.
