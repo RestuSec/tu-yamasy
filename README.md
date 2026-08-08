@@ -1,58 +1,101 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><img src="public/images/logo-yamasy.png" width="120" alt="Logo YAMASY"></p>
+
+<h1 align="center">SPP Payment System — TU YAMASY</h1>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  Aplikasi pembayaran SPP / tagihan sekolah berbasis web dengan panel admin dan portal orang tua.
 </p>
 
-## About Laravel
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-13-red" alt="Laravel 13">
+  <img src="https://img.shields.io/badge/PHP-8.3-blueviolet" alt="PHP 8.3">
+  <img src="https://img.shields.io/badge/TailwindCSS-4-38bdf8" alt="TailwindCSS">
+  <img src="https://img.shields.io/badge/DB-SQLite-blue" alt="SQLite">
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tentang
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Sistem pembayaran sekolah berbasis web untuk Tata Usaha YAMASY. Orang tua bisa melihat tagihan dan mengirim bukti pembayaran secara mandiri, sementara admin memverifikasi dan mengelola seluruh data keuangan sekolah.
 
-## Learning Laravel
+## Fitur
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Panel Admin
+- **Dashboard** — ringkasan total siswa, total pemasukan, total pengeluaran, dan pembayaran yang menunggu verifikasi.
+- **Manajemen Siswa** — CRUD data siswa (NIS, nama, kelas, tahun ajaran, data orang tua).
+- **Manajemen Tagihan** — CRUD tagihan per siswa (SPP, DSP, dll.) beserta status lunas/belum lunas.
+- **Pencatatan Pembayaran** — catat pembayaran tunai (langsung lunas) atau non-tunai.
+- **Verifikasi Pembayaran** — verifikasi atau tolak bukti pembayaran QRIS yang dikirim orang tua.
+- **Manajemen Pengeluaran** — catat pengeluaran sekolah.
+- **Pengaturan** — konfigurasi rekening bank, nomor kontak, dan gambar QRIS.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Portal Ortu
+- **Login mandiri** — menggunakan NIS + nama ibu (tanpa akun terpisah).
+- **Dashboard Tagihan** — melihat daftar tagihan milik anak beserta statusnya.
+- **Bayar Tagihan** — unggah bukti pembayaran QRIS, menunggu verifikasi admin.
+- **Pembayaran Mandiri** — kirim pembayaran untuk jenis tagihan baru.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Keamanan
 
-## Agentic Development
+- Route admin dilindungi middleware `admin.role` (hanya user role `admin`).
+- Route ortu dilindungi middleware `ortu.auth` + rate limiting login (`throttle:10,1`).
+- Registrasi publik dimatikan — admin dibuat lewat seeder.
+- Upload bukti divalidasi tipe gambar & ukuran maksimal.
+- Proteksi CSRF dan query database terparameterisasi (Eloquent).
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Teknologi
+
+- **Laravel 13** + Breeze (autentikasi, Tailwind CSS)
+- **PHP 8.3**
+- **SQLite** (default; siap dipindah ke MySQL/PostgreSQL via konfigurasi `.env`)
+- **Eloquent ORM** & migrations
+
+## Struktur Database
+
+| Tabel | Keterangan |
+|---|---|
+| `siswa` | Data siswa & orang tua |
+| `tagihan` | Tagihan per siswa (SPP, DSP, dll.) |
+| `pembayaran` | Riwayat pembayaran + bukti & status verifikasi |
+| `pengeluaran` | Catatan pengeluaran sekolah |
+| `pengaturan` | Konfigurasi bank & QRIS |
+| `users` | Akun admin |
+
+## Cara Install
 
 ```bash
-composer require laravel/boost --dev
+git clone https://github.com/RestuSec/tu-yamasy.git
+cd tu-yamasy
 
-php artisan boost:install
+composer install
+npm install
+
+cp .env.example .env
+php artisan key:generate
+
+php artisan migrate --seed
+php artisan storage:link
+npm run build
+
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Buka `http://localhost:8000`.
 
-## Contributing
+### Akun demo admin
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Email | Password |
+|---|---|
+| `admin@yamasy.sch.id` | `admin123` |
 
-## Code of Conduct
+Login portal ortu memakai **NIS** dan **nama ibu** siswa yang tersedia di data siswa.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Fitur Keamanan Lainnya
 
-## Security Vulnerabilities
+- `.env`, database SQLite, dan file upload pengguna di-`gitignore` agar data tidak bocor ke repository publik.
+- `APP_DEBUG` sebaiknya di-set `false` saat production.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Lisensi
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proyek ini bersifat open-source untuk keperluan pembelajaran. Silakan gunakan dan kembangkan lebih lanjut.
